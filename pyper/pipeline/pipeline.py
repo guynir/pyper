@@ -129,7 +129,7 @@ class Pipeline(Generic[CTX]):
 
                     # Make sure that this command fulfills all requirements.
                     undefined_properties: Set[str] = set(
-                        [prop_name for prop_name in cmd.provides if not context.is_property_defined(prop_name)])
+                        [prop_name for prop_name in cmd.provides if not context.has_attribute(prop_name)])
                     if len(undefined_properties) > 0:
                         raise MissingRequirementsException(f"Command {cmd.__class__.__name__} did not fulfill all "
                                                            f"requirements (missing: {','.join(undefined_properties)}).")

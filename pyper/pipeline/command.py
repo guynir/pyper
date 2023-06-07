@@ -98,7 +98,7 @@ class Command(ABC, LifecycleAware, Generic[CTX]):
         :raises MissingRequirementsException: If one or more requirements are missing from context.
         """
         missing_requirements: Set[str] = set(
-            [req for req in requirements if not context.is_property_defined(req)])
+            [req for req in requirements if not context.has_attribute(req)])
 
         if len(missing_requirements) > 0:
             raise MissingRequirementsException(
