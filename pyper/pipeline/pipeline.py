@@ -134,8 +134,8 @@ class Pipeline(Generic[CTX]):
                         raise MissingRequirementsException(f"Command {cmd.__class__.__name__} did not fulfill all "
                                                            f"requirements (missing: {','.join(undefined_properties)}).")
 
-            if self._sink:
-                self._sink.handle(context)
+                if self._sink:
+                    self._sink.handle(context)
 
         except AbortPipeline:
             # In case a command raised 'AbortPipeline' -- we are terminating gracefully and returning nothing to the
