@@ -43,12 +43,24 @@ class Context:
         """
         self._attributes[attribute_name] = attribute_value
 
+    def has_attribute(self, attribute_name: str) -> bool:
+        """
+        Provide indication if a given attribute exists.
+
+        :param attribute_name: Name of attribute.
+        :return: True if attribute exists, False if not.
+        """
+        return attribute_name in self._attributes
+
     def is_property_defined(self, property_name: str) -> bool:
         """
         Check if a given property within this context has a non-None value.
+        A property is an actual field of the context (as opposed to an attribute which is a simple value within
+        attribute dictionary).
 
         :param property_name: Property name.
-        :return: True if property has a non-None value, otherwise - False. If property is not defined, this call
+        :return: True if property has a non-None value, otherwise - False.
+        If property is not defined, this call
         will return False.
         """
         return hasattr(self, property_name) and getattr(self, property_name) is not None
@@ -70,9 +82,3 @@ class PipelineContextProvider(Generic[CTX]):
         :return: A new Context object on every call.
         """
         return Context()
-
-
-
-
-
-

@@ -89,7 +89,7 @@ class Pipeline(Generic[CTX]):
         requirements: Set[str] = command.requires - self._available_requirements
         if len(requirements) > 0:
             raise MissingRequirementsException(
-                f"Command '{command.__class__.__name__}' has unfulfilled requirements: {','.join(requirements)}.")
+                f"Command '{command.__class__.__name__}' has unfulfilled requirement(s): '{','.join(requirements)}'.")
 
         self._commands.append(command)
         self._available_requirements.update(command.provides)
