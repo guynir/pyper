@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Set, Generic
+from typing import Set, Generic, Optional, Union, List, Tuple
 
 from pyper.pipeline.callbacks import LifecycleAware
 from pyper.pipeline.context import CTX, Context
 from pyper.pipeline.exceptions import MissingRequirementsException
+from pyper.pipeline.utils import to_set
 
 
 class Command(ABC, LifecycleAware, Generic[CTX]):
@@ -26,16 +27,18 @@ class Command(ABC, LifecycleAware, Generic[CTX]):
     provided properties are defined (not None).
     """
 
-    def __init__(self, provides_properties: Set[str] = None, requires_properties: Set[str] = None):
+    def __init__(self,
+                 provides_properties: Optional[Union[Set, List, Tuple, object]] = None,
+                 requires_properties: Optional[Union[Set, List, Tuple, object]] = None):
         """
         Class initializer.
         """
 
         # Maintains the list of properties this command provides.
-        self._provides_properties: Set[str] = provides_properties if provides_properties is not None else set()
+        self._provides_properties: Set[str] = to_set(provides_properties)
 
         # Maintains the list of required properties for this command to execute.
-        self._requires_properties: Set[str] = requires_properties if requires_properties is not None else set()
+        self._requires_properties: Set[str] = to_set(requires_properties)
 
     @property
     def provides(self) -> Set[str]:
@@ -103,4 +106,3 @@ class Command(ABC, LifecycleAware, Generic[CTX]):
         if len(missing_requirements) > 0:
             raise MissingRequirementsException(
                 message.format(cmd_name=self.__class__.__name__, requirements=missing_requirements))
-

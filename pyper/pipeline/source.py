@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Generic, Set, List
+from typing import Generic, Set, List, Optional, Union, Tuple
 
 from pyper.exceptions import IllegalArgumentError
 from pyper.pipeline.callbacks import LifecycleAware
 from pyper.pipeline.context import CTX
+from pyper.pipeline.utils import to_set
 
 
 class Source(ABC, LifecycleAware, Generic[CTX]):
@@ -11,13 +12,13 @@ class Source(ABC, LifecycleAware, Generic[CTX]):
     A source object feeds input to the pipeline.
     """
 
-    def __init__(self, provides: Set[str] = None):
+    def __init__(self, provides: Optional[Union[Set, List, Tuple, object]] = None):
         """
         Class initializer.
 
         :param provides: Optional list of properties this source provides.
         """
-        self._provides = provides if provides is not None else set()
+        self._provides = to_set(provides)
 
     @property
     def provides(self) -> Set[str]:
@@ -51,7 +52,7 @@ class SimpleListSource(Source[CTX]):
         :param property_name: Name of property to set data at.
         :param data: List of data items to provide to pipeline.
         """
-        super().__init__({property_name})
+        super().__init__(property_name)
 
         # Make sure data is defined and is a list.
         if not data or not isinstance(data, list):
